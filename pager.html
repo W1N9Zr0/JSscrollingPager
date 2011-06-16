@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang=en>
+	<head>
+		<meta charset=utf-8>
+		<title>pager</title>
+		<style>
+			body {
+				font-family: "Segoe UI";
+			}
+			#pager {
+				list-style-type: none;
+				list-style-position: outside;
+				list-style-image: none;
+			}
+			#pager li {
+				float: left;
+				width: 22px;
+			}
+			#pager .current {
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<ul id="pager">
+		</ul>
+		
+		<script type="text/javascript">
+			var neighbors = 3;
+			var shift = neighbors;
+			
+			var current = 2;
+			var last = 20;
+			
+			var middle = current;
+			
+			function prev() {
+				middle -= shift;
+				updatePager();
+				return false;
+			}
+			function next() {
+				middle += shift;
+				updatePager();
+				return false;
+			}
+			
+			function updatePager() {
+				var high = middle + neighbors;
+				if (high > last - 2)
+					middle = last - neighbors - 1;
+				
+				var low = middle - neighbors;
+				if (low < 2) {
+					middle += (2 - low);
+					low = 2;
+				}
+				
+				high = middle + neighbors;
+				if (high > last - 2)
+					high = last - 1;
+				
+				var out = '<li' + (1 == current ? ' class="current"':'') +'><a href="#1" onclick="javascript:current=1;middle=current;updatePager();">1</a></li>';
+				out += '<li><a href="#previous" id="prev" onclick="javascript:return prev();">...</a></li>';
+				for (var i = low; i <= high; i++) {
+					out += '<li' + (i == current ? ' class="current"':'') +'><a href="#' + i + '"' +
+						' onclick="javascript:current = ' + i + '; middle = current; updatePager();"' +
+					'>' + i + '</a></li>';
+				}
+				out += '<li><a href="#next" id="next" onclick="javascript:return next();">...</a></li>';
+				out += '<li' + (last == current ? ' class="current"':'') +'><a href="#' + last +'" onclick="javascript:current=' + last + ';middle=current;updatePager();">' + last + '</a></li>';
+				document.getElementById('pager').innerHTML = out;
+			}
+			
+			updatePager();
+		</script>
+	</body>
+</html>
